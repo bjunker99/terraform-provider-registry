@@ -38,7 +38,12 @@ resource "aws_lambda_function" "terraform-provider-registry" {
 
   environment {
     variables = {
-      "TERRAFORM_PROVIDER_BUCKET" = aws_s3_bucket.terraform-provider-registry.id
+      "TERRAFORM_PROVIDER_BUCKET"        = aws_s3_bucket.terraform-provider-registry.id,
+      "TERRAFORM_PROVIDER_BUCKET_REGION" = aws_s3_bucket.terraform-provider-registry.region,
+      "OAUTH_CLIENT_ID"                  = var.github_oauth_client_id,
+      "OAUTH_CLIENT_SECRET"              = var.github_oauth_client_secret,
+      "TOKEN_SECRET_KEY"                 = var.auth_token_secret_key,
+      "AUTHENTICATION_ENABLED"           = var.auth_enabled,
     }
   }
 
@@ -230,7 +235,8 @@ data "aws_acm_certificate" "issued" {
 }
 
 data "aws_route53_zone" "selected" {
-  name = var.hosted_domain_name
+  count = var.hosted_domain_name == "" ? 0 : 1
+  name  = var.hosted_domain_name
 }
 
 resource "aws_api_gateway_base_path_mapping" "terraform-api-mapping" {
@@ -240,13 +246,18 @@ resource "aws_api_gateway_base_path_mapping" "terraform-api-mapping" {
 }
 
 resource "aws_route53_record" "terraform-registry-dns-alias" {
+  count   = var.hosted_domain_name == "" ? 0 : 1
   name    = aws_api_gateway_domain_name.custom_domain.domain_name
   type    = "A"
-  zone_id = data.aws_route53_zone.selected.id
+  zone_id = data.aws_route53_zone.selected[0].id
 
   alias {
     evaluate_target_health = false
     name                   = aws_api_gateway_domain_name.custom_domain.regional_domain_name
     zone_id                = aws_api_gateway_domain_name.custom_domain.regional_zone_id
   }
+}
+
+output "regional_endpoint" {
+  value = aws_api_gateway_domain_name.custom_domain.regional_domain_name
 }

@@ -5,17 +5,38 @@ variable "aws_region" {
 
 variable "release_version" {
   type    = string
-  default = "v1.0.0"
+  default = "v1.0.1"
 }
 
 variable "hosted_domain_name" {
-  type = string
+  type    = string
+  default = ""
 }
 
 variable "certificate_domain" {
-  type = string
+  type    = string
 }
 
 variable "custom_domain" {
-  type = string
+  type    = string
+}
+
+variable "github_oauth_client_id" {
+  type    = string
+  default = ""
+}
+
+variable "github_oauth_client_secret" {
+  type    = string
+  default = ""
+}
+
+variable "auth_token_secret_key" {
+  type    = string
+  default = ""
+}
+
+variable "auth_enabled" {
+  type    = string
+  default = "False"
 }
