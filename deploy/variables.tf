@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "release_version" {
   type    = string
-  default = "v1.0.1"
+  default = "v1.0.2"
 }
 
 variable "hosted_domain_name" {
