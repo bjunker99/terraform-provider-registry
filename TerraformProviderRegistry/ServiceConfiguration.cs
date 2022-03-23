@@ -18,7 +18,7 @@ namespace TerraformProviderRegistry
             GITHUB_BASE_URL = Environment.GetEnvironmentVariable("GITHUB_BASE_URL");
             TOKEN_SECRET_KEY = Environment.GetEnvironmentVariable("TOKEN_SECRET_KEY");
 
-            if (bool.TryParse(Environment.GetEnvironmentVariable("TOKEN_SECRET_KEY"), out bool auth))
+            if (bool.TryParse(Environment.GetEnvironmentVariable("AUTHENTICATION_ENABLED"), out bool auth))
             {
                 AUTHENTICATION_ENABLED = auth;
             }
