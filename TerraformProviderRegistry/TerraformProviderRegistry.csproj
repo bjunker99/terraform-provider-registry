@@ -17,6 +17,9 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.0.0" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.8.8" />
+    <PackageReference Include="Octokit" Version="0.50.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
+    <EmbeddedResource Include="serviceDiscovery.json" />
   </ItemGroup>
 
 </Project>

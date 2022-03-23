@@ -9,27 +9,20 @@ namespace TerraformProviderRegistry
     public class TerraformProviderService
     {
 
-        private string? _bucketName = String.Empty;
+        private string? _bucketName = string.Empty;
 
         public TerraformProviderService(string? bucketName)
         {
             _bucketName = bucketName;
         }
 
-        public static string serviceDiscovery()
-        {
-            return "{\"providers.v1\": \"/terraform/providers/v1/\"}";
-        }
-
-        public string? versions(string? name_space, string? name)
+        public async Task<string?> Versions(string? name_space, string? name)
         {
             string returnData = String.Empty;
-            var task = Task.Run(() => Content(_bucketName, $"{name_space}/{name}.json"));
-            task.Wait();
+            string? data = await Content(_bucketName, $"{name_space}/{name}.json");
 
-            if (task.Result != null)
+            if (data != null)
             {
-                string data = task.Result;
                 TerraformProvider? tp = JsonSerializer.Deserialize<TerraformProvider>(data);
 
                 TerraformAvailableProvider availableResponse = new TerraformAvailableProvider();
@@ -63,16 +56,14 @@ namespace TerraformProviderRegistry
             return returnData;
         }
 
-        public string? providerPackage(string? name_space, string? name, string? version, string? os, string? arch)
+        public async Task<string?> ProviderPackage(string? name_space, string? name, string? version, string? os, string? arch)
         {
             string? responseData = null;
 
-            var task = Task.Run(() => Content(_bucketName, $"{name_space}/{name}.json"));
-            task.Wait();
-
-            if (task.Result != null)
-            {
-                string data = task.Result;
+            string? data = await Content(_bucketName, $"{name_space}/{name}.json");
+            
+            if (data != null)
+            { 
                 TerraformProvider? tp = JsonSerializer.Deserialize<TerraformProvider>(data);
 
                 tp?.versions?.ForEach(tpv =>
