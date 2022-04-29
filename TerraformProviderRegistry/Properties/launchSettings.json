@@ -33,6 +33,12 @@
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {
+        "TERRAFORM_PROVIDER_BUCKET_REGION": "",
+        "AWS_SECRET_ACCESS_KEY": "",
+        "TERRAFORM_PROVIDER_BUCKET": "",
+        "AWS_ACCESS_KEY_ID": ""
+      },
       "publishAllPorts": true
     }
   }
