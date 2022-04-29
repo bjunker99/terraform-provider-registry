@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 	  <TargetFramework>net6.0</TargetFramework>
-    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <RuntimeIdentifiers>linux-x64;linux-musl-x64</RuntimeIdentifiers>
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
 	  <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -12,11 +12,13 @@
 
 	  <!-- Generate ready to run images during publishing to improvement cold starts. -->
 	  <PublishReadyToRun>true</PublishReadyToRun>
+	  <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.0.0" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.8.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Octokit" Version="0.50.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
     <EmbeddedResource Include="serviceDiscovery.json" />
