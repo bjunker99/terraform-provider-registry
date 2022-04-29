@@ -10,10 +10,12 @@ namespace TerraformProviderRegistry
     {
 
         private string? _bucketName = string.Empty;
+        private Amazon.RegionEndpoint _region = Amazon.RegionEndpoint.USEast1;
 
-        public TerraformProviderService(string? bucketName)
+        public TerraformProviderService(string? bucketName, string? region)
         {
             _bucketName = bucketName;
+            _region = Amazon.RegionEndpoint.GetBySystemName(region);
         }
 
         public async Task<string?> Versions(string? name_space, string? name)
@@ -101,7 +103,7 @@ namespace TerraformProviderRegistry
         private async Task<string?> Content(string? bucketName, string key)
         {
             string? content = null;
-            AmazonS3Client client = new AmazonS3Client();
+            AmazonS3Client client = new AmazonS3Client(_region);
 
             try
             {
