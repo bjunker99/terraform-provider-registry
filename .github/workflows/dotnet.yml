@@ -34,3 +34,9 @@ jobs:
       
     - name: Archive project
       run: zip -j ./publish/TerraformProviderRegistry.zip ./publish/TerraformProviderRegistry/*
+
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: ./publish/TerraformProviderRegistry.zip
+        draft: true
+        token: ${{ secrets.GITHUB_TOKEN }}
