@@ -25,6 +25,10 @@ namespace TerraformProviderRegistry.Controllers
                 using StreamReader reader = new(resource);
                 discovery = reader.ReadToEnd();
             }
+            else
+            {
+                return NoContent();
+            }
 
             JsonDocument doc = JsonDocument.Parse(discovery);
 

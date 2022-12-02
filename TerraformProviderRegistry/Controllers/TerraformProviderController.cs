@@ -35,7 +35,7 @@ namespace TerraformProviderRegistry.Controllers
             }
 
             var tps = new TerraformProviderService(_config.TERRAFORM_PROVIDER_BUCKET, _config.TERRAFORM_PROVIDER_BUCKET_REGION);
-            string? response = await tps.ProviderPackage(ns, name, version, os, arch);
+            string response = await tps.ProviderPackage(ns, name, version, os, arch);
 
             if (string.IsNullOrEmpty(response))
                 return NotFound();
@@ -62,7 +62,7 @@ namespace TerraformProviderRegistry.Controllers
             }
 
             var tps = new TerraformProviderService(_config.TERRAFORM_PROVIDER_BUCKET, _config.TERRAFORM_PROVIDER_BUCKET_REGION);
-            string? response = await tps.Versions(ns, name);
+            string response = await tps.Versions(ns, name);
 
             if (string.IsNullOrEmpty(response))
                 return NotFound();
