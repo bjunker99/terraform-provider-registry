@@ -2,9 +2,7 @@
 {
     public class CallbackQueryObject
     {
-
-        public string? code { get; set; }
-        public string? state { get; set; }
-
+        public string Code { get; set; } = ""; 
+        public string? state { get; set; } = "";
     }
 }

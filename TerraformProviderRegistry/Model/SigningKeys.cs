@@ -2,8 +2,6 @@
 {
     public class SigningKeys
     {
-
-        public List<GPGPublicKeys>? gpg_public_keys { get; set; }
-
+        public List<GPGPublicKeys> GPGPublicKeys { get; set; } = new List<GPGPublicKeys>();
     }
 }

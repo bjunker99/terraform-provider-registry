@@ -23,7 +23,7 @@ namespace TerraformProviderRegistry.Controllers
         public IActionResult Authorization([FromQuery] AuthorizationQueryObject request)
         {
             var tas = new TerraformAuthenticationService(_config.GITHUB_OAUTH_CLIENT_ID);
-            Uri uri = tas.Authorize(request.state);
+            Uri uri = tas.Authorize(request.State);
 
             return Redirect(uri.ToString());
         }
@@ -32,7 +32,7 @@ namespace TerraformProviderRegistry.Controllers
         public IActionResult Callback([FromQuery] CallbackQueryObject request)
         {
             var tas = new TerraformAuthenticationService(_config.GITHUB_OAUTH_CLIENT_ID);
-            Uri uri = tas.GenerateTokenRedirect(request.state, request.code);
+            Uri uri = tas.GenerateTokenRedirect(request.state, request.Code);
 
             return Redirect(uri.ToString());
         }
@@ -42,7 +42,7 @@ namespace TerraformProviderRegistry.Controllers
         {
             var tas = new TerraformAuthenticationService(_config.GITHUB_OAUTH_CLIENT_ID, _config.GITHUB_OAUTH_CLIENT_SECRET);
             
-            var oauthToken = await tas.GenerateOauthToken(request.code);
+            var oauthToken = await tas.GenerateOauthToken(request.Code);
             var response = await TerraformAuthenticationService.GenerateJWTToken(oauthToken, _config.TOKEN_SECRET_KEY);
 
             return Ok(response);

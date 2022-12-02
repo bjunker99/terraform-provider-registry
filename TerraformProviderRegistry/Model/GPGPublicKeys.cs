@@ -2,11 +2,10 @@
 {
     public class GPGPublicKeys
     {
-
-        public string? key_id { get; set; }
-        public string? ascii_armor { get; set; }
-        public string? trust_signature { get; set; }
-        public string? source { get; set; }
-        public string? source_url { get; set; }
+        public string KeyId { get; set; } = "";
+        public string AsciiArmor { get; set; } = "";
+        public string TrustSignature { get; set; } = "";
+        public string Source { get; set; } = "";
+        public string SourceUrl { get; set; } = "";
     }
 }

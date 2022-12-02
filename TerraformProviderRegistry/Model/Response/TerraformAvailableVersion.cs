@@ -2,10 +2,8 @@
 {
     public class TerraformAvailableVersion
     {
-
-        public string? version { get; set; }
-        public List<string>? protocols { get; set; }
-        public List<TerraformAvailablePlatform>? platforms { get; set; }
-
+        public string Version { get; set; } = "";
+        public List<string> Protocols { get; set; } = new List<string>();
+        public List<TerraformAvailablePlatform> Platforms { get; set; } = new List<TerraformAvailablePlatform>();
     }
 }

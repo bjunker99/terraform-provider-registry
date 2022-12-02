@@ -29,27 +29,27 @@ namespace TerraformProviderRegistry
 
                 TerraformAvailableProvider availableResponse = new TerraformAvailableProvider();
 
-                tp?.versions?.ForEach(tpv =>
+                tp.Versions.ForEach(tpv =>
                 {
                     TerraformAvailableVersion tav = new TerraformAvailableVersion
                     {
-                        version = tpv.version,
-                        protocols = tpv.protocols
+                        Version = tpv.Version,
+                        Protocols = tpv.Protocols
                     };
 
                     List<TerraformAvailablePlatform> platformList = new List<TerraformAvailablePlatform>();
 
-                    tpv?.platforms?.ForEach(tpp =>
+                    tpv.Platforms.ForEach(tpp =>
                     {
                         platformList.Add(new TerraformAvailablePlatform
                         {
-                            arch = tpp.arch,
-                            os = tpp.os
+                            Arch = tpp.Arch,
+                            OS = tpp.OS
                         });
                     });
 
-                    tav.platforms = platformList;
-                    availableResponse?.versions?.Add(tav);
+                    tav.Platforms = platformList;
+                    availableResponse.versions.Add(tav);
                 });
 
                 returnData = JsonSerializer.Serialize(availableResponse);
@@ -68,26 +68,26 @@ namespace TerraformProviderRegistry
             { 
                 TerraformProvider? tp = JsonSerializer.Deserialize<TerraformProvider>(data);
 
-                tp?.versions?.ForEach(tpv =>
+                tp.Versions.ForEach(tpv =>
                 {
-                    if (string.Equals(tpv.version, version, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(tpv.Version, version, StringComparison.OrdinalIgnoreCase))
                     {
-                        tpv?.platforms?.ForEach(p =>
+                        tpv.Platforms.ForEach(p =>
                         {
-                            if (string.Equals(p.os, os, StringComparison.OrdinalIgnoreCase)
-                            && string.Equals(p.arch, arch, StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(p.OS, os, StringComparison.OrdinalIgnoreCase)
+                            && string.Equals(p.Arch, arch, StringComparison.OrdinalIgnoreCase))
                             {
                                 TerraformProviderPackage tpp = new TerraformProviderPackage
                                 {
-                                    protocols = tpv.protocols,
-                                    filename = p.filename,
-                                    arch = p.arch,
-                                    download_url = p.download_url,
-                                    os = p.os,
-                                    shasum = p.shasum,
-                                    shasums_signature_url = p.shasums_signature_url,
-                                    shasums_url = p.shasums_url,
-                                    signing_keys = p.signing_keys
+                                    protocols = tpv.Protocols,
+                                    Filename = p.Filename,
+                                    Arch = p.Arch,
+                                    DownloadUrl = p.DownloadUrl,
+                                    OS = p.OS,
+                                    Shasum = p.Shasum,
+                                    ShasumsSignatureUrl = p.ShasumsSignatureUrl,
+                                    ShasumsUrl = p.ShasumsUrl,
+                                    SigningKeys = p.SigningKeys
                                 };
 
                                 responseData = JsonSerializer.Serialize(tpp);

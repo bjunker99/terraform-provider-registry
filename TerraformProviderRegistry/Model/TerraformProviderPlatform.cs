@@ -2,14 +2,13 @@
 {
     public class TerraformProviderPlatform
     {
-
-        public string? os { get; set; }
-        public string? arch { get; set; }
-        public string? filename { get; set; }
-        public string? download_url { get; set; }
-        public string? shasums_url { get; set; }
-        public string? shasums_signature_url { get; set; }
-        public string? shasum { get; set; }
-        public SigningKeys? signing_keys { get; set; }
+        public string OS { get; set; } = "";
+        public string Arch { get; set; } = "";
+        public string Filename { get; set; } = "";
+        public string DownloadUrl { get; set; } = "";
+        public string ShasumsUrl { get; set; } = "";
+        public string ShasumsSignatureUrl { get; set; } = "";
+        public string Shasum { get; set; } = "";
+        public SigningKeys SigningKeys { get; set; } = new SigningKeys();
     }
 }

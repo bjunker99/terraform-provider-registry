@@ -119,7 +119,7 @@ namespace TerraformProviderRegistry
 
                 returnToken = new ReturnToken
                 {
-                    access_token = handler.WriteToken(jwtToken)
+                    AccessToken = handler.WriteToken(jwtToken)
                 };
             }
 

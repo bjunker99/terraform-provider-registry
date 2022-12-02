@@ -2,11 +2,8 @@
 {
     public class TerraformProviderVersion
     {
-
-        public string? version { get; set; }
-        public List<string>? protocols { get; set; }
-        public List<TerraformProviderPlatform>? platforms { get; set; }
-
-
+        public string Version { get; set; } = "";
+        public List<string> Protocols { get; set; } = new List<string>();
+        public List<TerraformProviderPlatform> Platforms { get; set; } = new List<TerraformProviderPlatform>();
     }
 }

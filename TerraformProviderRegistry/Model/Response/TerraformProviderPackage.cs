@@ -2,7 +2,6 @@
 {
     public class TerraformProviderPackage : TerraformProviderPlatform
     {
-        public List<string>? protocols { get; set; }
-
+        public List<string> protocols { get; set; } = new List<string>();
     }
 }

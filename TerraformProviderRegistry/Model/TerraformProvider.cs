@@ -2,7 +2,6 @@
 {
     public class TerraformProvider
     {
-        public List<TerraformProviderVersion>? versions { get; set; }
-
+        public List<TerraformProviderVersion> Versions { get; set; } = new List<TerraformProviderVersion>();
     }
 }
