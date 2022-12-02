@@ -9,35 +9,38 @@ namespace TerraformProviderRegistry
     public class TerraformProviderService
     {
 
-        private string? _bucketName = string.Empty;
-        private Amazon.RegionEndpoint _region = Amazon.RegionEndpoint.USEast1;
+        private readonly string _bucketName = string.Empty;
+        private readonly Amazon.RegionEndpoint _region = Amazon.RegionEndpoint.USEast1;
 
-        public TerraformProviderService(string? bucketName, string? region)
+        public TerraformProviderService(string bucketName, string region)
         {
             _bucketName = bucketName;
             _region = Amazon.RegionEndpoint.GetBySystemName(region);
         }
 
-        public async Task<string?> Versions(string? name_space, string? name)
+        public async Task<string> Versions(string name_space, string name)
         {
             string returnData = String.Empty;
-            string? data = await Content(_bucketName, $"{name_space}/{name}.json");
+            string data = await Content(_bucketName, $"{name_space}/{name}.json");
 
-            if (data != null)
+            if (!string.IsNullOrEmpty(data))
             {
-                TerraformProvider? tp = JsonSerializer.Deserialize<TerraformProvider>(data);
+                var tp = JsonSerializer.Deserialize<TerraformProvider>(data);
 
-                TerraformAvailableProvider availableResponse = new TerraformAvailableProvider();
+                if (tp == null)
+                    return returnData;
+
+                TerraformAvailableProvider availableResponse = new();
 
                 tp.Versions.ForEach(tpv =>
                 {
-                    TerraformAvailableVersion tav = new TerraformAvailableVersion
+                    TerraformAvailableVersion tav = new()
                     {
                         Version = tpv.Version,
                         Protocols = tpv.Protocols
                     };
 
-                    List<TerraformAvailablePlatform> platformList = new List<TerraformAvailablePlatform>();
+                    List<TerraformAvailablePlatform> platformList = new();
 
                     tpv.Platforms.ForEach(tpp =>
                     {
@@ -58,15 +61,18 @@ namespace TerraformProviderRegistry
             return returnData;
         }
 
-        public async Task<string?> ProviderPackage(string? name_space, string? name, string? version, string? os, string? arch)
+        public async Task<string> ProviderPackage(string name_space, string name, string version, string os, string arch)
         {
-            string? responseData = null;
+            string responseData = string.Empty;
 
-            string? data = await Content(_bucketName, $"{name_space}/{name}.json");
-            
-            if (data != null)
-            { 
-                TerraformProvider? tp = JsonSerializer.Deserialize<TerraformProvider>(data);
+            string data = await Content(_bucketName, $"{name_space}/{name}.json");
+
+            if (!string.IsNullOrEmpty(data))
+            {
+                var tp = JsonSerializer.Deserialize<TerraformProvider>(data);
+
+                if (tp == null)
+                    return responseData;
 
                 tp.Versions.ForEach(tpv =>
                 {
@@ -77,7 +83,7 @@ namespace TerraformProviderRegistry
                             if (string.Equals(p.OS, os, StringComparison.OrdinalIgnoreCase)
                             && string.Equals(p.Arch, arch, StringComparison.OrdinalIgnoreCase))
                             {
-                                TerraformProviderPackage tpp = new TerraformProviderPackage
+                                TerraformProviderPackage tpp = new()
                                 {
                                     protocols = tpv.Protocols,
                                     Filename = p.Filename,
@@ -100,29 +106,23 @@ namespace TerraformProviderRegistry
             return responseData;
         }
 
-        private async Task<string?> Content(string? bucketName, string key)
+        private async Task<string> Content(string? bucketName, string key)
         {
-            string? content = null;
-            AmazonS3Client client = new AmazonS3Client(_region);
+            string content = string.Empty;
+            AmazonS3Client client = new(_region);
 
             try
             {
-                GetObjectRequest request = new GetObjectRequest
+                GetObjectRequest request = new()
                 {
                     BucketName = bucketName,
                     Key = key
                 };
 
-                using (GetObjectResponse response = await client.GetObjectAsync(request))
-                {
-                    using (Stream responseStream = response.ResponseStream)
-                    {
-                        using (StreamReader reader = new StreamReader(responseStream))
-                        {
-                            content = reader.ReadToEnd();
-                        }
-                    }
-                }
+                using GetObjectResponse response = await client.GetObjectAsync(request);
+                using Stream responseStream = response.ResponseStream;
+                using StreamReader reader = new(responseStream);
+                content = reader.ReadToEnd();
             }
             catch (Exception)
             { }

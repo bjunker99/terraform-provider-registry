@@ -9,12 +9,10 @@ namespace TerraformProviderRegistry.Controllers
     public class TerraformProviderController : ControllerBase
     {
 
-        private readonly ILogger<TerraformProviderController> _logger;
         private readonly IServiceConfiguration _config;
 
-        public TerraformProviderController(ILogger<TerraformProviderController> logger, IServiceConfiguration config)
+        public TerraformProviderController(IServiceConfiguration config)
         {
-            _logger = logger;
             _config = config;
         }
 
@@ -29,7 +27,8 @@ namespace TerraformProviderRegistry.Controllers
 
                     if (token == null)
                         return Unauthorized();
-                } catch (Exception)
+                }
+                catch (Exception)
                 {
                     return Unauthorized();
                 }
@@ -55,7 +54,8 @@ namespace TerraformProviderRegistry.Controllers
 
                     if (token == null)
                         return Unauthorized();
-                } catch (Exception)
+                }
+                catch (Exception)
                 {
                     return Unauthorized();
                 }
