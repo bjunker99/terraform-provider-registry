@@ -15,9 +15,8 @@ namespace TerraformProviderRegistry
             foreach (DictionaryEntry envVar in Environment.GetEnvironmentVariables())
             {
                 string? key = envVar.Key as string;
-                string? value = envVar.Value as string;
 
-                if (value == null)
+                if (envVar.Value is not string value)
                     continue;
 
                 string envVal = value;
