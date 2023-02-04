@@ -1,12 +1,18 @@
-﻿namespace TerraformProviderRegistry.Model
+﻿using System.Text.Json.Serialization;
+
+namespace TerraformProviderRegistry.Model
 {
     public class GPGPublicKeys
     {
-
-        public string? key_id { get; set; }
-        public string? ascii_armor { get; set; }
-        public string? trust_signature { get; set; }
-        public string? source { get; set; }
-        public string? source_url { get; set; }
+        [JsonPropertyName("key_id")]
+        public string KeyId { get; set; } = "";
+        [JsonPropertyName("ascii_armor")]
+        public string AsciiArmor { get; set; } = "";
+        [JsonPropertyName("trust_signature")]
+        public string TrustSignature { get; set; } = "";
+        [JsonPropertyName("source")]
+        public string Source { get; set; } = "";
+        [JsonPropertyName("source_url")]
+        public string SourceUrl { get; set; } = "";
     }
 }

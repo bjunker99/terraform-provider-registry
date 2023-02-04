@@ -1,15 +1,25 @@
-﻿namespace TerraformProviderRegistry.Model
+﻿using System.Text.Json.Serialization;
+
+namespace TerraformProviderRegistry.Model
 {
     public class TerraformProviderPlatform
     {
+        [JsonPropertyName("os")]
+        public string OS { get; set; } = "";
+        [JsonPropertyName("arch")]
+        public string Arch { get; set; } = "";
+        [JsonPropertyName("filename")]
+        public string Filename { get; set; } = "";
+        [JsonPropertyName("download_url")]
+        public string DownloadUrl { get; set; } = "";
+        [JsonPropertyName("shasums_url")]
+        public string ShasumsUrl { get; set; } = "";
+        [JsonPropertyName("shasums_signature_url")]
+        public string ShasumsSignatureUrl { get; set; } = "";
+        [JsonPropertyName("shasum")]
+        public string Shasum { get; set; } = "";
 
-        public string? os { get; set; }
-        public string? arch { get; set; }
-        public string? filename { get; set; }
-        public string? download_url { get; set; }
-        public string? shasums_url { get; set; }
-        public string? shasums_signature_url { get; set; }
-        public string? shasum { get; set; }
-        public SigningKeys? signing_keys { get; set; }
+        [JsonPropertyName("signing_keys")]
+        public SigningKeys SigningKeys { get; set; } = new SigningKeys();
     }
 }

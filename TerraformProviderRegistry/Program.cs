@@ -8,16 +8,16 @@ builder.Services.AddControllers();
 IServiceConfiguration serviceConfig = new ServiceConfiguration();
 builder.Services.AddSingleton(serviceConfig);
 
-string? aws_region = Environment.GetEnvironmentVariable("AWS_REGION");
+var container_value = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
 
-if (aws_region != null)
+if (string.IsNullOrEmpty(container_value))
 {
     builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
 }
 
 var app = builder.Build();
 
-if (aws_region != null)
+if (!string.IsNullOrEmpty(container_value))
 {
     app.UseHttpsRedirection();
 }

@@ -1,12 +1,14 @@
-﻿namespace TerraformProviderRegistry.Model
+﻿using System.Text.Json.Serialization;
+
+namespace TerraformProviderRegistry.Model
 {
     public class TerraformProviderVersion
     {
-
-        public string? version { get; set; }
-        public List<string>? protocols { get; set; }
-        public List<TerraformProviderPlatform>? platforms { get; set; }
-
-
+        [JsonPropertyName("version")]
+        public string Version { get; set; } = "";
+        [JsonPropertyName("protocols")]
+        public List<string> Protocols { get; set; } = new List<string>();
+        [JsonPropertyName("platforms")]
+        public List<TerraformProviderPlatform> Platforms { get; set; } = new List<TerraformProviderPlatform>();
     }
 }

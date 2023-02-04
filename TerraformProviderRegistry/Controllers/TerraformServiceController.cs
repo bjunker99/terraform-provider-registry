@@ -8,12 +8,8 @@ namespace TerraformProviderRegistry.Controllers
     [Route("/")]
     public class TerraformServiceController : ControllerBase
     {
-
-        private readonly ILogger<TerraformProviderController> _logger;
-
-        public TerraformServiceController(ILogger<TerraformProviderController> logger)
+        public TerraformServiceController()
         {
-            _logger = logger;
         }
 
         [HttpGet(".well-known/terraform.json")]
@@ -26,10 +22,12 @@ namespace TerraformProviderRegistry.Controllers
 
             if (resource != null)
             {
-                using (StreamReader reader = new StreamReader(resource))
-                {
-                    discovery = reader.ReadToEnd();
-                }
+                using StreamReader reader = new(resource);
+                discovery = reader.ReadToEnd();
+            }
+            else
+            {
+                return NoContent();
             }
 
             JsonDocument doc = JsonDocument.Parse(discovery);

@@ -2,7 +2,7 @@
 {
     public class TerraformAvailablePlatform
     {
-        public string? os { get; set; }
-        public string? arch { get; set; }
+        public string OS { get; set; } = "";
+        public string Arch { get; set; } = "";
     }
 }

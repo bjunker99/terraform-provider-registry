@@ -1,9 +1,10 @@
-﻿namespace TerraformProviderRegistry.Model
+﻿using System.Text.Json.Serialization;
+
+namespace TerraformProviderRegistry.Model
 {
     public class SigningKeys
     {
-
-        public List<GPGPublicKeys>? gpg_public_keys { get; set; }
-
+        [JsonPropertyName("gpg_public_keys")]
+        public List<GPGPublicKeys> GPGPublicKeys { get; set; } = new List<GPGPublicKeys>();
     }
 }

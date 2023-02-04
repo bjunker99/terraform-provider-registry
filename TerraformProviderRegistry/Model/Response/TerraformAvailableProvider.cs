@@ -2,13 +2,6 @@
 {
     public class TerraformAvailableProvider
     {
-
-        public TerraformAvailableProvider()
-        {
-            versions = new List<TerraformAvailableVersion>();
-        }
-
-        public List<TerraformAvailableVersion>? versions { get; set; }
-
+        public List<TerraformAvailableVersion> versions { get; set; } = new List<TerraformAvailableVersion>();
     }
 }

@@ -9,47 +9,50 @@ namespace TerraformProviderRegistry
     public class TerraformProviderService
     {
 
-        private string? _bucketName = string.Empty;
-        private Amazon.RegionEndpoint _region = Amazon.RegionEndpoint.USEast1;
+        private readonly string _bucketName = string.Empty;
+        private readonly Amazon.RegionEndpoint _region = Amazon.RegionEndpoint.USEast1;
 
-        public TerraformProviderService(string? bucketName, string? region)
+        public TerraformProviderService(string bucketName, string region)
         {
             _bucketName = bucketName;
             _region = Amazon.RegionEndpoint.GetBySystemName(region);
         }
 
-        public async Task<string?> Versions(string? name_space, string? name)
+        public async Task<string> Versions(string name_space, string name)
         {
             string returnData = String.Empty;
-            string? data = await Content(_bucketName, $"{name_space}/{name}.json");
+            string data = await Content(_bucketName, $"{name_space}/{name}.json");
 
-            if (data != null)
+            if (!string.IsNullOrEmpty(data))
             {
-                TerraformProvider? tp = JsonSerializer.Deserialize<TerraformProvider>(data);
+                var tp = JsonSerializer.Deserialize<TerraformProvider>(data);
 
-                TerraformAvailableProvider availableResponse = new TerraformAvailableProvider();
+                if (tp == null)
+                    return returnData;
 
-                tp?.versions?.ForEach(tpv =>
+                TerraformAvailableProvider availableResponse = new();
+
+                tp.Versions.ForEach(tpv =>
                 {
-                    TerraformAvailableVersion tav = new TerraformAvailableVersion
+                    TerraformAvailableVersion tav = new()
                     {
-                        version = tpv.version,
-                        protocols = tpv.protocols
+                        Version = tpv.Version,
+                        Protocols = tpv.Protocols
                     };
 
-                    List<TerraformAvailablePlatform> platformList = new List<TerraformAvailablePlatform>();
+                    List<TerraformAvailablePlatform> platformList = new();
 
-                    tpv?.platforms?.ForEach(tpp =>
+                    tpv.Platforms.ForEach(tpp =>
                     {
                         platformList.Add(new TerraformAvailablePlatform
                         {
-                            arch = tpp.arch,
-                            os = tpp.os
+                            Arch = tpp.Arch,
+                            OS = tpp.OS
                         });
                     });
 
-                    tav.platforms = platformList;
-                    availableResponse?.versions?.Add(tav);
+                    tav.Platforms = platformList;
+                    availableResponse.versions.Add(tav);
                 });
 
                 returnData = JsonSerializer.Serialize(availableResponse);
@@ -58,36 +61,39 @@ namespace TerraformProviderRegistry
             return returnData;
         }
 
-        public async Task<string?> ProviderPackage(string? name_space, string? name, string? version, string? os, string? arch)
+        public async Task<string> ProviderPackage(string name_space, string name, string version, string os, string arch)
         {
-            string? responseData = null;
+            string responseData = string.Empty;
 
-            string? data = await Content(_bucketName, $"{name_space}/{name}.json");
-            
-            if (data != null)
-            { 
-                TerraformProvider? tp = JsonSerializer.Deserialize<TerraformProvider>(data);
+            string data = await Content(_bucketName, $"{name_space}/{name}.json");
 
-                tp?.versions?.ForEach(tpv =>
+            if (!string.IsNullOrEmpty(data))
+            {
+                var tp = JsonSerializer.Deserialize<TerraformProvider>(data);
+
+                if (tp == null)
+                    return responseData;
+
+                tp.Versions.ForEach(tpv =>
                 {
-                    if (string.Equals(tpv.version, version, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(tpv.Version, version, StringComparison.OrdinalIgnoreCase))
                     {
-                        tpv?.platforms?.ForEach(p =>
+                        tpv.Platforms.ForEach(p =>
                         {
-                            if (string.Equals(p.os, os, StringComparison.OrdinalIgnoreCase)
-                            && string.Equals(p.arch, arch, StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(p.OS, os, StringComparison.OrdinalIgnoreCase)
+                            && string.Equals(p.Arch, arch, StringComparison.OrdinalIgnoreCase))
                             {
-                                TerraformProviderPackage tpp = new TerraformProviderPackage
+                                TerraformProviderPackage tpp = new()
                                 {
-                                    protocols = tpv.protocols,
-                                    filename = p.filename,
-                                    arch = p.arch,
-                                    download_url = p.download_url,
-                                    os = p.os,
-                                    shasum = p.shasum,
-                                    shasums_signature_url = p.shasums_signature_url,
-                                    shasums_url = p.shasums_url,
-                                    signing_keys = p.signing_keys
+                                    protocols = tpv.Protocols,
+                                    Filename = p.Filename,
+                                    Arch = p.Arch,
+                                    DownloadUrl = p.DownloadUrl,
+                                    OS = p.OS,
+                                    Shasum = p.Shasum,
+                                    ShasumsSignatureUrl = p.ShasumsSignatureUrl,
+                                    ShasumsUrl = p.ShasumsUrl,
+                                    SigningKeys = p.SigningKeys
                                 };
 
                                 responseData = JsonSerializer.Serialize(tpp);
@@ -100,32 +106,21 @@ namespace TerraformProviderRegistry
             return responseData;
         }
 
-        private async Task<string?> Content(string? bucketName, string key)
+        private async Task<string> Content(string? bucketName, string key)
         {
-            string? content = null;
-            AmazonS3Client client = new AmazonS3Client(_region);
+            string content = string.Empty;
+            AmazonS3Client client = new(_region);
 
-            try
+            GetObjectRequest request = new()
             {
-                GetObjectRequest request = new GetObjectRequest
-                {
-                    BucketName = bucketName,
-                    Key = key
-                };
+                BucketName = bucketName,
+                Key = key
+            };
 
-                using (GetObjectResponse response = await client.GetObjectAsync(request))
-                {
-                    using (Stream responseStream = response.ResponseStream)
-                    {
-                        using (StreamReader reader = new StreamReader(responseStream))
-                        {
-                            content = reader.ReadToEnd();
-                        }
-                    }
-                }
-            }
-            catch (Exception)
-            { }
+            using GetObjectResponse response = await client.GetObjectAsync(request);
+            using Stream responseStream = response.ResponseStream;
+            using StreamReader reader = new(responseStream);
+            content = reader.ReadToEnd();
 
             return content;
         }

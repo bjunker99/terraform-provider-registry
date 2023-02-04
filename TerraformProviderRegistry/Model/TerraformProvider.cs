@@ -1,8 +1,10 @@
-﻿namespace TerraformProviderRegistry.Model
+﻿using System.Text.Json.Serialization;
+
+namespace TerraformProviderRegistry.Model
 {
     public class TerraformProvider
     {
-        public List<TerraformProviderVersion>? versions { get; set; }
-
+        [JsonPropertyName("versions")]
+        public List<TerraformProviderVersion> Versions { get; set; } = new List<TerraformProviderVersion>();
     }
 }

@@ -10,24 +10,23 @@ namespace TerraformProviderRegistry
     public class TerraformAuthenticationService
     {
 
-        private string? _clientId = string.Empty;
-        private string? _clientSecret = string.Empty;
+        private readonly string _clientId = string.Empty;
+        private readonly string _clientSecret = string.Empty;
 
-        public TerraformAuthenticationService(string? clientId, string? clientSecret)
+        public TerraformAuthenticationService(string clientId, string clientSecret)
         {
             _clientId = clientId;
             _clientSecret = clientSecret;
         }
 
-        public TerraformAuthenticationService(string? clientId)
+        public TerraformAuthenticationService(string clientId)
         {
             _clientId = clientId;
-            _clientSecret = string.Empty;
         }
 
-        public Uri Authorize(string? state, Uri? baseAddress = null)
+        public Uri Authorize(string state, Uri? baseAddress = null)
         {
-            GitHubClient? client = null;
+            GitHubClient client;
 
             if (baseAddress == null)
             {
@@ -46,20 +45,20 @@ namespace TerraformProviderRegistry
             return client.Oauth.GetGitHubLoginUrl(request);
         }
 
-        public Uri GenerateTokenRedirect(string? state, string? code)
+        public Uri GenerateTokenRedirect(string state, string code)
         {
-            Uri uri = new Uri($"http://localhost:18523/login?code={code}&state={state}");
+            Uri uri = new($"http://localhost:18523/login?code={code}&state={state}");
 
             return uri;
         }
 
-        public async Task<OauthToken?> GenerateOauthToken(string? code, Uri? baseAddress = null)
+        public async Task<OauthToken?> GenerateOauthToken(string code, Uri? baseAddress = null)
         {
             OauthToken? token = null;
 
             try
             {
-                GitHubClient? client = null;
+                GitHubClient client;
 
                 if (baseAddress == null)
                 {
@@ -81,10 +80,9 @@ namespace TerraformProviderRegistry
             return token;
         }
 
-        public static async Task<ReturnToken?> GenerateJWTToken(OauthToken? token, string? key)
+        public static async Task<ReturnToken?> GenerateJWTToken(OauthToken? token, string key)
         {
             ReturnToken? returnToken = null;
-            string jsonResponse = string.Empty;
 
             var client = new GitHubClient(new ProductHeaderValue("terraform-provider-registry"))
             {
@@ -97,7 +95,7 @@ namespace TerraformProviderRegistry
             {
                 byte[] key_data = System.Text.Encoding.UTF8.GetBytes(key);
 
-                SymmetricSecurityKey ssk = new SymmetricSecurityKey(key_data);
+                SymmetricSecurityKey ssk = new(key_data);
                 var handler = new JwtSecurityTokenHandler();
 
                 var now = DateTime.UtcNow;
@@ -119,14 +117,14 @@ namespace TerraformProviderRegistry
 
                 returnToken = new ReturnToken
                 {
-                    access_token = handler.WriteToken(jwtToken)
+                    AccessToken = handler.WriteToken(jwtToken)
                 };
             }
 
             return returnToken;
         }
 
-        public static JwtSecurityToken? ValidateJWTToken(StringValues authHeader, string? key)
+        public static JwtSecurityToken? ValidateJWTToken(StringValues authHeader, string key)
         {
             if (authHeader.Count != 1)
                 throw new Exception("No authorization header.");
@@ -143,7 +141,7 @@ namespace TerraformProviderRegistry
             {
                 byte[] key_data = System.Text.Encoding.UTF8.GetBytes(key);
 
-                SymmetricSecurityKey ssk = new SymmetricSecurityKey(key_data);
+                SymmetricSecurityKey ssk = new(key_data);
 
                 try
                 {
