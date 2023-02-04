@@ -111,21 +111,16 @@ namespace TerraformProviderRegistry
             string content = string.Empty;
             AmazonS3Client client = new(_region);
 
-            try
+            GetObjectRequest request = new()
             {
-                GetObjectRequest request = new()
-                {
-                    BucketName = bucketName,
-                    Key = key
-                };
+                BucketName = bucketName,
+                Key = key
+            };
 
-                using GetObjectResponse response = await client.GetObjectAsync(request);
-                using Stream responseStream = response.ResponseStream;
-                using StreamReader reader = new(responseStream);
-                content = reader.ReadToEnd();
-            }
-            catch (Exception)
-            { }
+            using GetObjectResponse response = await client.GetObjectAsync(request);
+            using Stream responseStream = response.ResponseStream;
+            using StreamReader reader = new(responseStream);
+            content = reader.ReadToEnd();
 
             return content;
         }

@@ -10,10 +10,12 @@ namespace TerraformProviderRegistry.Controllers
     {
 
         private readonly IServiceConfiguration _config;
+        private readonly ILogger<TerraformProviderController> _logger;
 
-        public TerraformProviderController(IServiceConfiguration config)
+        public TerraformProviderController(ILogger<TerraformProviderController> logger, IServiceConfiguration config)
         {
             _config = config;
+            _logger = logger;
         }
 
         [HttpGet("{ns}/{name}/{version}/download/{os}/{arch}")]
@@ -61,8 +63,17 @@ namespace TerraformProviderRegistry.Controllers
                 }
             }
 
-            var tps = new TerraformProviderService(_config.TERRAFORM_PROVIDER_BUCKET, _config.TERRAFORM_PROVIDER_BUCKET_REGION);
-            string response = await tps.Versions(ns, name);
+            string response = string.Empty;
+
+            try
+            {
+                var tps = new TerraformProviderService(_config.TERRAFORM_PROVIDER_BUCKET, _config.TERRAFORM_PROVIDER_BUCKET_REGION);
+                response = await tps.Versions(ns, name);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
 
             if (string.IsNullOrEmpty(response))
                 return NotFound();
