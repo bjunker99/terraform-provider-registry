@@ -29,7 +29,11 @@ jobs:
 
     - name: Publish
       run: dotnet publish -c Release --no-restore --property:PublishDir=.\publish\TerraformProviderRegistry
-      
+
+    - name: Test
+      run: |
+        ls -al
+
     - name: Archive project
       run: zip -j TerraformProviderRegistry.zip ./publish/TerraformProviderRegistry/*
 
