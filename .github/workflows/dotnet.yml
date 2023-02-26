@@ -28,10 +28,10 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
     - name: Publish
-      run: dotnet publish -c Release --no-restore --property:PublishDir=PublishTerraformProviderRegistry
+      run: dotnet publish -c Release --no-restore --property:PublishDir=.\publish\TerraformProviderRegistry
       
     - name: Archive project
-      run: zip -j TerraformProviderRegistry.zip PublishTerraformProviderRegistry/*
+      run: zip -j TerraformProviderRegistry.zip ./publish/TerraformProviderRegistry/*
 
     - uses: ncipollo/release-action@v1
       with:
