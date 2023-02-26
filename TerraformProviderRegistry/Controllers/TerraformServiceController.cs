@@ -8,14 +8,20 @@ namespace TerraformProviderRegistry.Controllers
     [Route("/")]
     public class TerraformServiceController : ControllerBase
     {
-        public TerraformServiceController()
+
+        private readonly ILogger<TerraformServiceController> _logger;
+
+        public TerraformServiceController(ILogger<TerraformServiceController> logger)
         {
+            _logger = logger;
         }
 
         [HttpGet(".well-known/terraform.json")]
         public IActionResult ServiceDiscovery()
         {
             string discovery = "{\"providers.v1\": \"/terraform/providers/v1/\"}";
+
+            _logger.LogInformation(".well-known/terraform.json");
 
             var assembly = typeof(TerraformServiceController).Assembly;
             Stream? resource = assembly?.GetManifestResourceStream("TerraformProviderRegistry.serviceDiscovery.json");

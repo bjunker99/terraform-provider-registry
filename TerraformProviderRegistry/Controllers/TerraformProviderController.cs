@@ -36,6 +36,8 @@ namespace TerraformProviderRegistry.Controllers
                 }
             }
 
+            _logger.LogInformation($"{ns}/{name}/{version}/download/{os}/{arch}");
+
             var tps = new TerraformProviderService(_config.TERRAFORM_PROVIDER_BUCKET, _config.TERRAFORM_PROVIDER_BUCKET_REGION);
             string response = await tps.ProviderPackage(ns, name, version, os, arch);
 
@@ -63,6 +65,7 @@ namespace TerraformProviderRegistry.Controllers
                 }
             }
 
+            _logger.LogInformation($"{ns}/{name}/versions");
             string response = string.Empty;
 
             try
