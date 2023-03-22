@@ -16,6 +16,5 @@ RUN dotnet publish "TerraformProviderRegistry.csproj" --no-restore -c Release -o
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENV TERRAFORM_PROVIDER_BUCKET_REGION="us-east-1"
-ENV TERRAFORM_PROVIDER_BUCKET=""
+
 ENTRYPOINT ["dotnet", "TerraformProviderRegistry.dll"]
