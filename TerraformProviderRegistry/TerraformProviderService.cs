@@ -21,7 +21,7 @@ namespace TerraformProviderRegistry
         public async Task<string> Versions(string name_space, string name)
         {
             string returnData = String.Empty;
-            string data = await Content(_bucketName, $"{name_space}/{name}.json");
+            string data = await Content(_bucketName, $"providers/{name_space}/{name}.json");
 
             if (!string.IsNullOrEmpty(data))
             {
@@ -65,7 +65,7 @@ namespace TerraformProviderRegistry
         {
             string responseData = string.Empty;
 
-            string data = await Content(_bucketName, $"{name_space}/{name}.json");
+            string data = await Content(_bucketName, $"providers/{name_space}/{name}.json");
 
             if (!string.IsNullOrEmpty(data))
             {
